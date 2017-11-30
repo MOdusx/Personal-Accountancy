@@ -1,0 +1,161 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+ 
+public class Main {
+    private Scanner sc = new Scanner(System.in);
+    private List<String[]> texts = readFile();
+    private Date date;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private boolean isEdit = false;
+ 
+    public static void main(String[] args) throws IOException {
+        Main main = new Main();
+ 
+        while (true) {
+            main.mainMenu();
+        }
+ 
+    }
+ 
+    private void mainMenu(){
+        int var;
+        System.out.println(
+                "1: Добавить Расход \n" +
+                        "2: Поиск Расходов \n" +
+                        "3: Добавить Доход \n"+
+                        "4: Расчитать Доход \n"+
+                        "0: Выход \n" +
+                        "Введите номер пункта меню:");
+        var = sc.nextInt();
+        if (var == 1){
+            addCost();
+        }else if (var == 2){
+            searchCost();
+        }else if (var == 3) {
+            addIncome();
+        } else if (var == 4) {
+            calculateIncome();
+        }else if (var == 0){
+            System.out.print("Good Bye");
+            System.exit(0);
+        }else if (var > 4){
+            System.out.println("Неверное число");
+            System.out.println();
+        }
+ 
+    }
+ 
+    private void calculateIncome() {
+        if (texts.size() > 0) {
+            if (isEdit)
+                texts = readFile();
+ 
+            int dohod = 0;
+            int rashod = 0;
+ 
+            for (String[] text : texts) {
+                if ("Доход".equals(text[0])) {
+                    dohod += Integer.parseInt(text[1]);
+                } else {
+                    rashod += Integer.parseInt(text[1]);
+                }
+            }
+ 
+            System.out.println("Доход: " + dohod);
+            System.out.println("Расход: " + rashod);
+            System.out.println("Суммарный доход: " + (dohod-rashod));
+            System.out.println();
+        } else {
+            System.out.println("Файл пуст");
+            System.out.println();
+        }
+    }
+ 
+    private void addIncome() {
+        System.out.println("Введите доход:");
+        String s = sc.next();
+        isEdit = true;
+        date = new Date();
+ 
+        String str = ("Доход" + "\t") + s + "\t" + simpleDateFormat.format(date);
+        writeFile(str);
+        texts.add(str.split("\t"));
+    }
+ 
+    private void searchCost() {
+        if (texts.size() > 0) {
+            if (isEdit)
+                texts = readFile();
+ 
+            System.out.println("Введите дату для поиска");
+            String s = sc.next();
+            boolean isEmpty = true;
+ 
+            for (String[] text : texts) {
+                if (s.equals(text[2]) && "Расход".equals(text[0])) {
+                    System.out.println(text[0] + " " + text[1] + " " + text[2]);
+                    isEmpty = false;
+                }
+            }
+ 
+            System.out.println();
+ 
+            if (isEmpty) {
+                System.out.println("По введенной дате расхода не найдено");
+                System.out.println();
+            }
+        } else {
+            System.out.println("Файл пуст");
+            System.out.println();
+        }
+    }
+ 
+    private void addCost() {
+        System.out.println("Введите расход: ");
+        String s = sc.next();
+        isEdit = true;
+        date = new Date();
+ 
+        String str = "Расход" + "\t" + s + "\t" + simpleDateFormat.format(date);
+        writeFile(str);
+        texts.add(str.split("\t"));
+ 
+    }
+ 
+    private List<String[]> readFile() {
+        try {
+            List<String> textFromFile = Files.readAllLines(Paths.get("list.txt"));
+            List<String[]> linesFromText = new ArrayList<>();
+            String[] strings;
+ 
+            for (String s : textFromFile) {
+                strings = s.split("\t");
+                linesFromText.add(strings);
+            }
+ 
+            return linesFromText;
+ 
+        } catch (IOException e) {
+            System.out.println("Не правильный путь к файлу");
+            System.out.println();
+        }
+        return null;
+    }
+ 
+    private void writeFile(String s) {
+        try (FileWriter fileWriter = new FileWriter("list.txt", true)) {
+            fileWriter.write(s);
+            fileWriter.write("\n");
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
