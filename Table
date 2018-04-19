@@ -1,0 +1,78 @@
+package Mush;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Oleg
+ */
+
+    public class Table {
+    
+    private int id;
+    private final String name;
+    private final String type;
+    private final String family;
+    private final String genus;
+    private final String forest;
+    private final String month;
+    
+    public Table(int ID, String Name, String Type, String Family, String Genus, String Forest, String Month)
+    {
+        this.id = ID;
+        this.name = Name;
+        this.type = Type;
+        this.family = Family;
+        this.genus = Genus;
+        this.forest = Forest;
+        this.month = Month;
+    }
+
+    
+    public int getId()
+    {
+        return id;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public String getType()
+    {
+        return type;
+    }
+    
+    public String getFamily()
+    {
+        return family;
+    }
+    public String getGenus()
+    {
+        return genus;
+    }
+    public String getForest()
+    {
+        return forest;
+    }
+    public String getMonth()
+    {
+        return month;
+    }
+}
