@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Mush;
+
+import com.mysql.jdbc.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Oleg
+ */
+public class MySQL {
+    private String dbUrl = "jdbc:mysql://127.0.0.1:3306/test?characterEncoding=Cp1251";//рядок для зв’язку з БД
+
+    private String user ="root";//ПОЛЬЗОВАТЕЛЬ
+    private String password="";//ПАРОЛЬ
+    private Connection conn = null;
+    private String tbl="mushrooms";//ТАБЛИЦА С КОТОРОЙ БУДЕМ РАБОТАТЬ
+    private Statement s=null;
+    MySQL(String SERVER, String PORT, String DB, String USR, String PAS, String TBL){
+        //    "jdbc:mysql://СЕРВЕР:ПОРТ/БД";
+        dbUrl="jdbc:mysql://"  + SERVER + ":" + PORT +"/" +DB+"?characterEncoding=Cp1251";
+        user=USR;
+        password=PAS;
+        if (TBL!=null) tbl=TBL;
+    }
+    public String Conect(){
+        try
+        {
+            // !!!! Инициализирует ДРАЙВЕР !!!! должно быть обязательно
+            Class.forName ("com.mysql.jdbc.Driver").newInstance ();
+            //подключаемся
+            conn = DriverManager.getConnection (dbUrl, user,password);
+            return "Ok";
+        }
+        catch (Exception e)
+        {
+            System.err.println ("Cannot connect to database server");
+            return e.getLocalizedMessage();
+        }
+    
+    }
+    public Statement getStatement(){
+        try {
+            return (Statement) conn.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(MySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+}
